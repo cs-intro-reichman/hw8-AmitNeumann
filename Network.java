@@ -62,26 +62,19 @@ public class Network {
      *  If any of the two names is not a user in this network,
      *  or if the "follows" addition failed for some reason, returns false. */
     public boolean addFollowee(String name1, String name2) {
-    if (name1 == null || name2 == null || name1.equals(name2)) return false; 
-  
-    boolean name1Inside=false, name2Inside=false; 
-    User user1=getUser(name1);
+    if (name1 == null || name2 == null) return false; 
+    if(name1.equals(name2)) return false;
+    User user1 = getUser(name1);
+    User user2 = getUser(name2);
 
-    for(int i=0;i<userCount;i++){
-        if(users[i]!=null){
-            if(users[i].getName().equals(name1)) {
-                name1Inside=true;
-            }
-            if(users[i].getName().equals(name2)) {
-                name2Inside=true;
-            }
-
-        }
+    // Checks if both users exist
+    if (user1 == null || user2 == null) {
+         System.out.println("One or both users do not exist in the network.");
+        return false; // Fail gracefully if either user is missing
     }
-        if(name1Inside&&name2Inside == false) return false; // one of them is not in the network
-
+        // Add followee to user1's list
         return user1.addFollowee(name2);
-    }
+}
 
     
     /** For the user with the given name, recommends another user to follow. The recommended user is
@@ -128,7 +121,7 @@ public class Network {
 
     // Returns a textual description of all the users in this network, and who they follow.
     public String toString() {
-       String print="Network:"+"\n";
+       String print="Network:";
         for(int i=0;i<users.length;i++){
            if(users[i]!=null){
             String[] follows = users[i].getfFollows();
@@ -136,7 +129,7 @@ public class Network {
             for(int j=0;j<users[i].getfCount();j++){
                 followList+=follows[j]+" ";
             }
-            print+=users[i].getName()+" -> "+followList+"\n";
+            print+="\n"+users[i].getName()+" -> "+followList;
            } 
         }
         return print;
