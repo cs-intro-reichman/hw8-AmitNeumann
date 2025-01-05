@@ -43,8 +43,11 @@
 
     /** If this user follows the given name, returns true; otherwise returns false. */
     public boolean follows(String name) {
-        for(int i=0;i<this.follows.length;i++) {
-            if(this.follows[i]!=null && this.follows[i].equals(name)){
+        if (name == null) {
+            return false; // Null safety check
+        }
+        for(int i=0;i<this.fCount;i++) {
+            if(this.follows[i]!=null && this.follows[i].equalsIgnoreCase(name)){ // לשים לב שלדעתי לא צריך להיות ככה
                 return true;
             }
         }

@@ -30,7 +30,7 @@ public class Network {
      *  Notice that the method receives a String, and returns a User object. */
     public User getUser(String name) {
         for(int i=0;i<userCount;i++) {
-            if(users[i]!=null && users[i].getName().equals(name)){
+            if(users[i]!=null && users[i].getName().equalsIgnoreCase(name)){
                 return users[i];
             }
         }
@@ -62,50 +62,51 @@ public class Network {
      *  If any of the two names is not a user in this network,
      *  or if the "follows" addition failed for some reason, returns false. */
     public boolean addFollowee(String name1, String name2) {
-       boolean name1Inside=false, name2Inside=false; 
-       User user1=null;
-       for(int i=0;i<userCount;i++){
+    if (name1 == null || name2 == null || name1.equals(name2)) return false; 
+  
+    boolean name1Inside=false, name2Inside=false; 
+    User user1=getUser(name1);
+
+    for(int i=0;i<userCount;i++){
+        if(users[i]!=null){
             if(users[i].getName().equals(name1)) {
                 name1Inside=true;
-                user1=users[i];
             }
             if(users[i].getName().equals(name2)) {
                 name2Inside=true;
             }
+
         }
+    }
         if(name1Inside&&name2Inside == false) return false; // one of them is not in the network
 
         return user1.addFollowee(name2);
     }
+
     
     /** For the user with the given name, recommends another user to follow. The recommended user is
      *  the user that has the maximal mutual number of followees as the user with the given name. */
     public String recommendWhoToFollow(String name) {
         if(getUser(name)==null) return null;
         User mostRec=null;
-        for(int k=0;k<userCount;k++){ // for setting purposes
-            if(users[k]!=null){
-                if(!(users[k].getName().equals(name))) {
-                    mostRec=users[k];
-                    break;
-                }
-            }
-        }
+        int mutuals=0;
         for(int i=0;i<userCount;i++){
-            if(users[i]!=null && mostRec!=null){
+            if(users[i]!=null){
                 if(users[i].getName().equals(name)) continue;
-                if(users[i].countMutual(getUser(name))> mostRec.countMutual(getUser(name))) {
+                if(users[i].countMutual(getUser(name))> mutuals) {
                     mostRec=users[i];
+                    mutuals=users[i].countMutual(getUser(name));
                 }
             }
         }
         if(mostRec.getName()!=null) return mostRec.getName();
-        else return null;
+        return null;
     }
 
     /** Computes and returns the name of the most popular user in this network: 
      *  The user who appears the most in the follow lists of all the users. */
     public String mostPopularUser() {
+        if (userCount == 0) return null; // No users in the network
         User popular=users[0];
         for(int i=0;i<userCount;i++){
             if(followeeCount(popular.getName())<followeeCount(users[i].getName())) {
@@ -127,7 +128,7 @@ public class Network {
 
     // Returns a textual description of all the users in this network, and who they follow.
     public String toString() {
-       String print="";
+       String print="Network:"+"\n";
         for(int i=0;i<users.length;i++){
            if(users[i]!=null){
             String[] follows = users[i].getfFollows();
