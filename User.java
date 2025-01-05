@@ -67,7 +67,7 @@
         }
         for (int i = 0; i < fCount; i++) {
             System.out.println("Checking: " + follows[i]);
-            if (follows[i] != null && follows[i].equals(name)) {
+            if (follows[i] != null && follows[i].equalsIgnoreCase(name)) {
                 System.out.println(name + " has already been followed by " + this.getName());
                 return false;
             }
