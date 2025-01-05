@@ -56,23 +56,25 @@
     /** Makes this user follow the given name. If successful, returns true. 
      *  If this user already follows the given name, or if the follows list is full, does nothing and returns false; */
     public boolean addFollowee(String name) {
+        System.out.println("Trying to add: " + name);
         if (name == null) {
             System.out.println("Cannot follow a null user.");
             return false;
         }
-        if(fCount >= maxfCount) {
-            System.out.println(this.getName()+" already follows max 10 users");
-            return false; // follows list is full 
+        if (fCount >= maxfCount) {
+            System.out.println(this.getName() + " already follows max " + maxfCount + " users");
+            return false;
         }
-        for(int i=0;i<fCount;i++){ //checks if he's already been followed by this user
-            if(follows[i] != null && follows[i].equals(name)) {
-               System.out.println(name+" has already been followed by "+this.getName());
-                return false; 
-            } 
+        for (int i = 0; i < fCount; i++) {
+            System.out.println("Checking: " + follows[i]);
+            if (follows[i] != null && follows[i].equals(name)) {
+                System.out.println(name + " has already been followed by " + this.getName());
+                return false;
+            }
         }
-        // valid name to add
-        follows[fCount]=name;
+        follows[fCount] = name;
         fCount++;
+        System.out.println("Added followee: " + name);
         return true;
     }
 
